@@ -15,7 +15,6 @@ public class ComputerPropertiesRest extends AuditBaseRest implements Serializabl
     private long memorySize;
     private long diskSize;
     private long cpuSpeed;
-    private long cpuCoreCount;
     private long numberOfLogicalProcessors;
     private long numberOfProcessors;
     private String lastLoggedInUser;
@@ -90,14 +89,6 @@ public class ComputerPropertiesRest extends AuditBaseRest implements Serializabl
 
     public void setCpuSpeed(long cpuSpeed) {
         this.cpuSpeed = cpuSpeed;
-    }
-
-    public long getCpuCoreCount() {
-        return cpuCoreCount;
-    }
-
-    public void setCpuCoreCount(long cpuCoreCount) {
-        this.cpuCoreCount = cpuCoreCount;
     }
 
     public long getNumberOfLogicalProcessors() {
