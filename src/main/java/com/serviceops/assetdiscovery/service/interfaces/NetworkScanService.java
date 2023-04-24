@@ -7,14 +7,14 @@ import java.util.List;
 public interface NetworkScanService {
     void scan(long id);
 
-    void save(NetworkScanRest networkScanRest);
+    NetworkScanRest save(NetworkScanRest networkScanRest);
 
     NetworkScanRest findById(long id);
 
     List<NetworkScanRest> findAll();
 
-    void updateById(long id, NetworkScanRest networkScanRest);
+    NetworkScanRest updateById(long id, NetworkScanRest networkScanRest);
 
-    void deleteById(long id);
+    boolean deleteById(long id);
 
 }

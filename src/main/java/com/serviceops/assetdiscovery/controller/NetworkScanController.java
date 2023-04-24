@@ -36,20 +36,6 @@ public class NetworkScanController {
         networkScanService.scan(id);
     }
 
-    @PostMapping(value = "/networkScan", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> saveNetworkScan(@RequestBody NetworkScanRest networkScanRest) {
-        logger.debug("saving network scan -> {}", networkScanRest.getName());
-        networkScanService.save(networkScanRest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @PutMapping(value = "/networkScan/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateNetworkScan(@PathVariable long id, @RequestBody NetworkScanRest networkScanRest) {
-        logger.debug("updating network scan -> {}", networkScanRest.getId());
-        networkScanService.updateById(id, networkScanRest);
-
-    }
-
     @GetMapping(value = "/networkScan", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<NetworkScanRest> getAllNetworkScan() {
         logger.debug("fetching all network scan");
@@ -62,15 +48,28 @@ public class NetworkScanController {
         return networkScanService.findById(id);
     }
 
-    @DeleteMapping("/networkScan/{id}")
-    public void deleteNetworkScanById(@PathVariable long id) {
-        logger.debug("deleting network scan by id ->{}", id);
-        networkScanService.deleteById(id);
-        schedulersService.deleteByNetworkScanId(id);
-    }
-
     @GetMapping(value = "/schedulers", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<SchedulerRest> getSchedulers() {
         return schedulersService.findAll();
+    }
+
+    @PostMapping(value = "/networkScan", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<NetworkScanRest> saveNetworkScan(@RequestBody NetworkScanRest networkScanRest) {
+        logger.debug("saving network scan -> {}", networkScanRest.getName());
+        return new ResponseEntity<>(networkScanService.save(networkScanRest), HttpStatus.CREATED);
+    }
+
+    @PutMapping(value = "/networkScan/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public NetworkScanRest updateNetworkScan(@PathVariable long id,
+            @RequestBody NetworkScanRest networkScanRest) {
+        logger.debug("updating network scan -> {}", networkScanRest.getId());
+        return networkScanService.updateById(id, networkScanRest);
+    }
+
+    @DeleteMapping("/networkScan/{id}")
+    public boolean deleteNetworkScanById(@PathVariable long id) {
+        logger.debug("deleting network scan by id ->{}", id);
+        networkScanService.deleteById(id);
+        return schedulersService.deleteByNetworkScanId(id);
     }
 }

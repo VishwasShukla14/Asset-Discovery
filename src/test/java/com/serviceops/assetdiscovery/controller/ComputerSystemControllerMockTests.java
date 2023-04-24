@@ -2,8 +2,8 @@ package com.serviceops.assetdiscovery.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.serviceops.assetdiscovery.config.JwtAuthenticationFilter;
-import com.serviceops.assetdiscovery.rest.BiosRest;
-import com.serviceops.assetdiscovery.service.impl.BiosServiceImpl;
+import com.serviceops.assetdiscovery.rest.ComputerSystemRest;
+import com.serviceops.assetdiscovery.service.interfaces.ComputerSystemService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,9 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BiosController.class)
+@WebMvcTest(ComputerSystemController.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class BiosControllerTest {
+public class ComputerSystemControllerMockTests {
 
     @Autowired
     private MockMvc mockMvc;
@@ -34,7 +34,7 @@ public class BiosControllerTest {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @MockBean
-    private BiosServiceImpl biosService;
+    private ComputerSystemService computerSystemService;
 
     private static String asJsonString(final Object obj) {
         try {
@@ -43,36 +43,32 @@ public class BiosControllerTest {
             throw new RuntimeException(e);
         }
     }
-
     @Test
-    public void testFindByRefId() throws Exception {
-        BiosRest biosRest = new BiosRest();
-        biosRest.setRefId(1L);
-        List<BiosRest> biosRests = new ArrayList<>();
-        biosRests.add(biosRest);
-        when(biosService.findByRefId(1L)).thenReturn(biosRests);
-        this.mockMvc.perform(get("/{refId}/bios", 1L)).andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].refId").value(biosRest.getRefId()));
+    public void findByRefId() throws Exception {
+        ComputerSystemRest computerSystemRest = new ComputerSystemRest();
+        computerSystemRest.setRefId(1l);
+        List<ComputerSystemRest> computerSystemRests = new ArrayList<>();
+        computerSystemRests.add(computerSystemRest);
+        when(computerSystemService.findByRefId(anyLong())).thenReturn(computerSystemRests);
+         this.mockMvc.perform(get("/{refId}/computersystem",1L)).andExpect(status().isOk());
     }
-
     @Test
-    void testUpdateBios() throws Exception {
-        BiosRest biosRest = new BiosRest();
-        biosRest.setId(1L);
-        biosRest.setRefId(1L);
-        biosRest.setManufacturer("LENOVO");
-        when(biosService.updateByRefId(1L, biosRest)).thenReturn(biosRest);
-        mockMvc.perform(put("/{refId}/bios", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(biosRest))).andExpect(status().isOk())
+    public void updateComputerSystem() throws Exception {
+        ComputerSystemRest computerSystemRest = new ComputerSystemRest();
+        computerSystemRest.setRefId(1l);
+        computerSystemRest.setId(1l);
+        computerSystemRest.setManufacturer("Lenovo");
+        when(computerSystemService.updateByRefId(1l,computerSystemRest)).thenReturn(computerSystemRest);
+        mockMvc.perform(put("/{refId}/computersystem",1l).contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(computerSystemRest))).andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.refId").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.manufacturer").value("LENOVO"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.manufacturer").value("Lenovo"));
     }
-
     @Test
-    public void testDeleteByRefId() throws Exception {
-        when(biosService.deleteByRefId(anyLong())).thenReturn(true);
-        this.mockMvc.perform(delete("/{refId}/bios", anyLong())).andExpect(status().isOk());
+    public void testDeleteByRefId() throws Exception{
+        when(computerSystemService.deleteByRefId(anyLong())).thenReturn(true);
+        this.mockMvc.perform(delete("/{refId}/computersystem",anyLong())).andExpect(status().isOk());
     }
 
 }
